@@ -299,7 +299,7 @@
     "qrCode": "二維碼",
     "useGithubLogin": "使用 GitHub 登錄",
     "useLarkLogin": "使用飛書登錄",
-    "useOIDCLogin": "使用 OIDC 登錄",
+    "useOIDCLogin": "使用 CuaZuaChat 登錄",
     "useWechatLogin": "使用 Wechat 登錄",
     "usernameOrEmail": "用戶名/電郵",
     "usernameRequired": "用戶名/電郵為必填項",

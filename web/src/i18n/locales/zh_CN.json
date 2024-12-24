@@ -796,7 +796,7 @@
     "passwordRest": "密码重置确认",
     "useGithubLogin": "使用 Github 登录",
     "useWechatLogin": "使用 Wechat 登录",
-    "useOIDCLogin": "使用 OIDC 登录",
+    "useOIDCLogin": "使用 CuaZuaChat 登录",
     "useLarkLogin": "使用飞书登录"
   },
   "description": "All in one 的 OpenAI 接口\n整合各种 API 访问方式\n一键部署，开箱即用",

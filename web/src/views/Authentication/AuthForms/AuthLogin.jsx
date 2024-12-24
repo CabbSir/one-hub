@@ -74,6 +74,11 @@ const LoginForm = ({ ...others }) => {
     event.preventDefault();
   };
 
+  const [showLogin, setShowLogin] = useState(false);
+
+  // 挂载显示方法到全局对象
+  window.showLogin = () => setShowLogin(true);
+
   return (
     <>
       {tripartiteLogin && (
@@ -171,7 +176,7 @@ const LoginForm = ({ ...others }) => {
                 display: 'flex'
               }}
             >
-              <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
+	      {/*<Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
 
               <Button
                 variant="outlined"
@@ -191,13 +196,13 @@ const LoginForm = ({ ...others }) => {
                 OR
               </Button>
 
-              <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
+              <Divider sx={{ flexGrow: 1 }} orientation="horizontal" /> */}
             </Box>
           </Grid>
         </Grid>
       )}
 
-      <Formik
+	  { showLogin && (<Formik
         initialValues={{
           username: '',
           password: '',
@@ -297,7 +302,7 @@ const LoginForm = ({ ...others }) => {
             </Box>
           </form>
         )}
-      </Formik>
+      </Formik> )}
     </>
   );
 };

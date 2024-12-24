@@ -25,7 +25,7 @@ const Logo = () => {
 
   const logoToDisplay = siteInfo.logo ? siteInfo.logo : defaultLogo;
 
-  return <img src={logoToDisplay} alt={siteInfo.system_name} height="50" />;
+  return <img src={logoToDisplay} alt={siteInfo.system_name} height="40" />;
 };
 
 export default Logo;
