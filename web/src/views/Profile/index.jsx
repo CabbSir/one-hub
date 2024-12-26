@@ -187,7 +187,7 @@ export default function Profile() {
                     />
                   </FormControl>
                 </Grid>
-                <Grid xs={12}>
+	  {/*                <Grid xs={12}>
                   <FormControl fullWidth variant="outlined">
                     <InputLabel htmlFor="password">{t('profilePage.password')}</InputLabel>
                     <OutlinedInput
@@ -219,10 +219,10 @@ export default function Profile() {
                   <Button variant="contained" color="primary" onClick={submit}>
                     {t('profilePage.submit')}
                   </Button>
-                </Grid>
+                </Grid> */}
               </Grid>
             </SubCard>
-            <SubCard title={t('profilePage.accountBinding')}>
+	  {/*     <SubCard title={t('profilePage.accountBinding')}>
               <Grid container spacing={2}>
                 {status.wechat_login && !inputs.wechat_id && (
                   <Grid xs={12} md={4}>
@@ -296,7 +296,7 @@ export default function Profile() {
                   </Grid>
                 )}
               </Grid>
-            </SubCard>
+            </SubCard> */}
             <SubCard title={t('profilePage.other')}>
               <Grid container spacing={2}>
                 <Grid xs={12}>
