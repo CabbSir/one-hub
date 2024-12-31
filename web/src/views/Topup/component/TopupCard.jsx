@@ -29,6 +29,8 @@ import { useTranslation } from 'react-i18next';
 const TopupCard = () => {
   const { t } = useTranslation(); // Translation hook
   const theme = useTheme();
+  const [invitationCode, setInvitationCode] = useState('');
+  const [inviterEmail, setInviterEmail] = useState('');
   const [redemptionCode, setRedemptionCode] = useState('');
   const [userQuota, setUserQuota] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +66,34 @@ const TopupCard = () => {
           return quota + data;
         });
         setRedemptionCode('');
+      } else {
+        showError(message);
+      }
+    } catch (err) {
+      showError('请求失败');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const bindCode = async () => {
+    if (invitationCode === '') {
+      showInfo("请输入邀请码");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const res = await API.post('/api/user/bindcode', {
+        code: trims(invitationCode)
+      });
+      const { success, message, data } = res.data;
+      if (success) {
+        showSuccess('绑定邀请人成功，奖励已发放！');
+        setUserQuota((quota) => {
+          return quota + data;
+        });
+        setInvitationCode('');
+	setInviterEmail("刷新后显示");
       } else {
         showError(message);
       }
@@ -143,6 +173,24 @@ const TopupCard = () => {
     }
   };
 
+  const getInviter = async () => {
+    try {
+      let res = await API.get(`/api/user/inviter`);
+      const { success, message, data } = res.data;
+      if (success) {
+        if (data != "") {
+          if (data.email == "") {
+            setInviterEmail("管理员")
+          } else {
+            setInviterEmail(data.email)
+          }
+        }
+      }
+    } catch (error) {
+      return;
+    }
+  };
+
   const handlePaymentSelect = (payment) => {
     setSelectedPayment(payment);
   };
@@ -195,6 +243,7 @@ const TopupCard = () => {
   useEffect(() => {
     getPayment().then();
     getUserQuota().then();
+    getInviter().then();
   }, []);
 
   return (
@@ -318,6 +367,35 @@ const TopupCard = () => {
         sx={{
           marginTop: '40px'
         }}
+        title={'邀请人绑定'}
+      >
+        <FormControl fullWidth variant="outlined">
+          <InputLabel htmlFor="code">{inviterEmail ? '邀请者账户' : '朋友邀请码'}</InputLabel>
+          <OutlinedInput
+            id="invitationCode"
+            label={inviterEmail ? '邀请者账户' : '朋友邀请码'}
+            type="text"
+            value={inviterEmail || invitationCode}
+            onChange={(e) => !inviterEmail && setInvitationCode(e.target.value)}
+            name="code"
+            placeholder={inviterEmail ? '' : '请输入朋友分享给您的邀请码'}
+            disabled={!!inviterEmail}
+            endAdornment={
+              <InputAdornment position="end">
+                <Button variant="contained" onClick={bindCode} disabled={!!inviterEmail || isSubmitting}>
+                {isSubmitting ? t('topupCard.exchangeButton.submitting') : (inviterEmail ? '绑定成功' : '绑定邀请人')}
+                </Button>
+              </InputAdornment>
+            }
+            aria-describedby="helper-text-channel-quota-label"
+          />
+        </FormControl>
+      </SubCard>
+
+      <SubCard
+        sx={{
+          marginTop: '40px'
+        }}
         title={t('topupCard.redemptionCodeTopup')}
       >
         <FormControl fullWidth variant="outlined">
@@ -357,3 +435,4 @@ const TopupCard = () => {
 };
 
 export default TopupCard;
+

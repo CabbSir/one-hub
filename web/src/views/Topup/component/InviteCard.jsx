@@ -22,7 +22,7 @@ const InviteCard = () => {
       const res = await API.get('/api/user/aff');
       const { success, message, data } = res.data;
       if (success) {
-        let link = `${window.location.origin}/register?aff=${data}`;
+        let link = `${data}`;
         setInviteUrl(link);
         copy(link, t('inviteCard.inviteUrlLabel'));
       } else {
@@ -52,9 +52,9 @@ const InviteCard = () => {
         }}
       >
         <Stack justifyContent="center" alignItems={'center'} spacing={3}>
-          <Typography variant="h3" sx={{ color: theme.palette.primary.dark }}>
+          {/* <Typography variant="h3" sx={{ color: theme.palette.primary.dark }}>
             {t('inviteCard.inviteReward')}
-          </Typography>
+          </Typography> */}
           <Typography variant="body" sx={{ color: theme.palette.primary.dark }}>
             {t('inviteCard.inviteDescription')}
           </Typography>
@@ -83,3 +83,4 @@ const InviteCard = () => {
 };
 
 export default InviteCard;
+

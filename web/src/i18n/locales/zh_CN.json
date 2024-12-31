@@ -283,9 +283,9 @@
   },
   "inviteCard": {
     "inviteReward": "邀请奖励",
-    "inviteDescription": "分享您的邀请链接，邀请好友注册，即可获得奖励!",
-    "inviteUrlLabel": "邀请链接",
-    "generateInvite": "点击生成邀请链接",
+    "inviteDescription": "好友在当前页面填写您的邀请码，双方均可获得奖励!",
+    "inviteUrlLabel": "邀请码",
+    "generateInvite": "点击生成邀请码",
     "copyButton": {
       "copy": "复制",
       "generate": "生成"
@@ -796,7 +796,7 @@
     "passwordRest": "密码重置确认",
     "useGithubLogin": "使用 Github 登录",
     "useWechatLogin": "使用 Wechat 登录",
-    "useOIDCLogin": "使用 CuaZuaChat 登录",
+    "useOIDCLogin": "使用 CuaZuaChat 账户登录",
     "useLarkLogin": "使用飞书登录"
   },
   "description": "All in one 的 OpenAI 接口\n整合各种 API 访问方式\n一键部署，开箱即用",
@@ -887,7 +887,6 @@
     "otherArg": "其他参数",
     "delChannel": "删除渠道",
     "delChannelInfo": "是否删除渠道",
-    "check": "检测",
     "manual": "手动",
     "auto": "自动",
     "testAllChannel": "已成功开始测试所有通道，请刷新页面查看结果。",
@@ -1123,3 +1122,4 @@
     "nameTip": "渠道名称"
   }
 }
+

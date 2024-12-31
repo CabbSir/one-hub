@@ -1080,10 +1080,10 @@
   "搜索令牌的名称...": "Search for token name...",
   "已用额度": "Balance used",
   "剩余额度": "Remaining balance",
-  "邀请链接": "Invitation link",
+  "邀请链接": "Invitation Code",
   "邀请奖励": "Invitation reward",
-  "分享您的邀请链接，邀请好友注册，即可获得奖励!": "Share your unique invitation link with friends. By inviting them to register, both you and your friends will earn rewards!",
-  "点击生成邀请链接": "Click to generate an invitation link",
+  "好友在当前页面填写您的邀请码，双方均可获得奖励!": "Share your unique invitation link with friends. By inviting them to register, both you and your friends will earn rewards!",
+  "点击生成邀请链接": "Click to generate an invitation Code",
   "生成": "Generate",
   "请输入充值码！": "Please enter the redemption code!",
   "充值成功！": "Recharge successful!",
@@ -1131,3 +1131,4 @@
   "Header 配置": "Header Configuration",
   "本配置主要是用于使用cloudflare Zero Trust将端口暴露到公网时，需要配置的header": "This configuration is mainly used for the header that needs to be configured when using Cloudflare Zero Trust to expose the port to the public network"
 }
+

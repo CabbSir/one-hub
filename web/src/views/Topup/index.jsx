@@ -12,17 +12,17 @@ const Topup = () => {
       <Grid xs={12}>
         <Alert severity="warning">{t('topupPage.alertMessage')}</Alert>
       </Grid>
-      <Grid xs={12} md={12} lg={12}>
+      <Grid xs={12} md={6} lg={8}>
         <Stack spacing={2}>
           <TopupCard />
         </Stack>
       </Grid>
-	  <h2>如果您邀请了用户，可以加入QQ群:952994911 私信群主获取额外兑换码</h2>
-	  {/*<Grid xs={12} md={6} lg={4}>
+      <Grid xs={12} md={6} lg={4}>
         <InviteCard />
-      </Grid> */}
+      </Grid>
     </Grid>
   );
 };
 
 export default Topup;
+

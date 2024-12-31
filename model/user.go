@@ -527,3 +527,41 @@ func GetUserStatisticsByPeriod(startTimestamp, endTimestamp int64) (statistics [
 
 	return statistics, err
 }
+
+func BindInvitationCode(code string, userId int) (quota int, err error) {
+	var inviterId int
+	inviterId, err = GetUserIdByAffCode(code)
+	if err != nil {
+		return 0, err
+	}
+
+	if inviterId <= 0 {
+		return 0, errors.New("邀请码错误")
+	}
+
+	// 判断是否已经有过邀请人
+	u, err := GetUserById(userId, true)
+
+	if u.InviterId > 0 {
+		// 已经有了邀请人，返回错误
+		return 0, errors.New("已经填写过邀请码，无法再次绑定")
+	}
+
+	err = DB.Model(&User{}).Where("id = ?", userId).Update("inviter_id", inviterId).Error
+
+	if err != nil {
+		return 0, err
+	}
+
+	if config.QuotaForInvitee > 0 {
+		_ = IncreaseUserQuota(userId, config.QuotaForInvitee)
+		RecordLog(userId, LogTypeSystem, fmt.Sprintf("使用邀请码赠送 %s", common.LogQuota(config.QuotaForInvitee)))
+	}
+	if config.QuotaForInviter > 0 {
+		_ = IncreaseUserQuota(inviterId, config.QuotaForInviter)
+		RecordLog(inviterId, LogTypeSystem, fmt.Sprintf("邀请用户赠送 %s", common.LogQuota(config.QuotaForInviter)))
+	}
+
+	return config.QuotaForInvitee, nil
+}
+

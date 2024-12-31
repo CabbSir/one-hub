@@ -713,3 +713,68 @@ func TopUp(c *gin.Context) {
 		"data":    quota,
 	})
 }
+
+type bindCodeRequest struct {
+	Key string `json:"code"`
+}
+
+func BindCode(c *gin.Context) {
+	req := bindCodeRequest{}
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	id := c.GetInt("id")
+	quota, err := model.BindInvitationCode(req.Key, id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    quota,
+	})
+}
+
+func GetInviter(c *gin.Context) {
+	id := c.GetInt("id")
+	user, err := model.GetUserById(id, true)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	if user.InviterId > 0 {
+		user, err = model.GetUserById(user.InviterId, true)
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+				"message": "",
+				"data":    gin.H{"email": "未知"},
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"success": true,
+			"message": "",
+			"data":    gin.H{"email": user.Email},
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"success": true,
+			"message": "",
+			"data":    "",
+		})
+	}
+}
+
