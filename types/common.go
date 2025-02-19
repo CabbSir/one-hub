@@ -1,13 +1,16 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Usage struct {
 	PromptTokens            int                     `json:"prompt_tokens"`
-	CompletionTokens        int                     `json:"completion_tokens,omitempty"`
+	CompletionTokens        int                     `json:"completion_tokens"`
 	TotalTokens             int                     `json:"total_tokens"`
-	PromptTokensDetails     PromptTokensDetails     `json:"prompt_tokens_details,omitempty"`
-	CompletionTokensDetails CompletionTokensDetails `json:"completion_tokens_details,omitempty"`
+	PromptTokensDetails     PromptTokensDetails     `json:"prompt_tokens_details"`
+	CompletionTokensDetails CompletionTokensDetails `json:"completion_tokens_details"`
 }
 
 type PromptTokensDetails struct {
@@ -16,12 +19,17 @@ type PromptTokensDetails struct {
 	TextTokens           int `json:"text_tokens,omitempty"`
 	ImageTokens          int `json:"image_tokens,omitempty"`
 	CachedTokensInternal int `json:"cached_tokens_internal,omitempty"`
+
+	CachedWriteTokens int `json:"-"`
+	CachedReadTokens  int `json:"-"`
 }
 
 type CompletionTokensDetails struct {
-	AudioTokens     int `json:"audio_tokens,omitempty"`
-	ReasoningTokens int `json:"reasoning_tokens,omitempty"`
-	TextTokens      int `json:"text_tokens,omitempty"`
+	AudioTokens              int `json:"audio_tokens,omitempty"`
+	TextTokens               int `json:"text_tokens,omitempty"`
+	ReasoningTokens          int `json:"reasoning_tokens"`
+	AcceptedPredictionTokens int `json:"accepted_prediction_tokens"`
+	RejectedPredictionTokens int `json:"rejected_prediction_tokens"`
 }
 
 func (i *PromptTokensDetails) Merge(other *PromptTokensDetails) {
@@ -58,6 +66,8 @@ func (e *OpenAIError) Error() string {
 
 	// 转换为JSON
 	bytes, _ := json.Marshal(response)
+
+	fmt.Println("e", string(bytes))
 	return string(bytes)
 }
 

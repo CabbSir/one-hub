@@ -6,7 +6,7 @@ import (
 	"one-api/types"
 )
 
-func (s *SunoProvider) Submit(action string, request *SunoSubmitReq) (data *TaskResponse[string], errWithCode *types.OpenAIErrorWithStatusCode) {
+func (s *SunoProvider) Submit(action string, request *SunoSubmitReq) (data *types.TaskResponse[string], errWithCode *types.OpenAIErrorWithStatusCode) {
 	var submitUri string
 	switch action {
 	case SunoActionMusic:
@@ -27,7 +27,7 @@ func (s *SunoProvider) Submit(action string, request *SunoSubmitReq) (data *Task
 		return nil, common.ErrorWrapper(err, "new_request_failed", http.StatusInternalServerError)
 	}
 
-	data = &TaskResponse[string]{}
+	data = &types.TaskResponse[string]{}
 	_, errWithCode = s.Requester.SendRequest(req, data, false)
 
 	return data, errWithCode

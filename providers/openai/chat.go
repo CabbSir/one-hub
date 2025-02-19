@@ -13,12 +13,18 @@ import (
 )
 
 type OpenAIStreamHandler struct {
-	Usage     *types.Usage
-	ModelName string
-	isAzure   bool
+	Usage      *types.Usage
+	ModelName  string
+	isAzure    bool
+	EscapeJSON bool
 }
 
 func (p *OpenAIProvider) CreateChatCompletion(request *types.ChatCompletionRequest) (openaiResponse *types.ChatCompletionResponse, errWithCode *types.OpenAIErrorWithStatusCode) {
+	if (strings.HasPrefix(request.Model, "o1") || strings.HasPrefix(request.Model, "o3")) && request.MaxTokens > 0 {
+		request.MaxCompletionTokens = request.MaxTokens
+		request.MaxTokens = 0
+	}
+
 	req, errWithCode := p.GetRequestTextBody(config.RelayModeChatCompletions, request.Model, request)
 	if errWithCode != nil {
 		return nil, errWithCode
@@ -59,6 +65,10 @@ func (p *OpenAIProvider) CreateChatCompletion(request *types.ChatCompletionReque
 }
 
 func (p *OpenAIProvider) CreateChatCompletionStream(request *types.ChatCompletionRequest) (requester.StreamReaderInterface[string], *types.OpenAIErrorWithStatusCode) {
+	if (strings.HasPrefix(request.Model, "o1") || strings.HasPrefix(request.Model, "o3")) && request.MaxTokens > 0 {
+		request.MaxCompletionTokens = request.MaxTokens
+		request.MaxTokens = 0
+	}
 	streamOptions := request.StreamOptions
 	// 如果支持流式返回Usage 则需要更改配置：
 	if p.SupportStreamOptions {
@@ -85,9 +95,10 @@ func (p *OpenAIProvider) CreateChatCompletionStream(request *types.ChatCompletio
 	}
 
 	chatHandler := OpenAIStreamHandler{
-		Usage:     p.Usage,
-		ModelName: request.Model,
-		isAzure:   p.IsAzure,
+		Usage:      p.Usage,
+		ModelName:  request.Model,
+		isAzure:    p.IsAzure,
+		EscapeJSON: p.StreamEscapeJSON,
 	}
 
 	return requester.RequestStream[string](p.Requester, resp, chatHandler.HandlerChatStream)
@@ -148,5 +159,11 @@ func (h *OpenAIStreamHandler) HandlerChatStream(rawLine *[]byte, dataChan chan s
 		}
 	}
 
+	if h.EscapeJSON {
+		if data, err := json.Marshal(openaiResponse.ChatCompletionStreamResponse); err == nil {
+			dataChan <- string(data)
+			return
+		}
+	}
 	dataChan <- string(*rawLine)
 }

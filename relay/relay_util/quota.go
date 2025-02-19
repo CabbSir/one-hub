@@ -30,6 +30,9 @@ type Quota struct {
 	channelId        int
 	tokenId          int
 	HandelStatus     bool
+
+	startTime         time.Time
+	firstResponseTime time.Time
 }
 
 func NewQuota(c *gin.Context, modelName string, promptTokens int) *Quota {
@@ -156,7 +159,7 @@ func (q *Quota) completedQuotaConsumption(usage *types.Usage, tokenName string, 
 		tokenName,
 		quota,
 		q.getLogContent(),
-		getRequestTime(ctx),
+		q.getRequestTime(),
 		isStream,
 		q.GetLogMeta(usage),
 	)
@@ -180,6 +183,7 @@ func (q *Quota) Undo(c *gin.Context) {
 
 func (q *Quota) Consume(c *gin.Context, usage *types.Usage, isStream bool) {
 	tokenName := c.GetString("token_name")
+	q.startTime = c.GetTime("requestStartTime")
 	// 如果没有报错，则消费配额
 	go func(ctx context.Context) {
 		err := q.completedQuotaConsumption(usage, tokenName, isStream, ctx)
@@ -202,6 +206,11 @@ func (q *Quota) GetLogMeta(usage *types.Usage) map[string]any {
 		"output_ratio": q.price.GetOutput(),
 	}
 
+	firstResponseTime := q.GetFirstResponseTime()
+	if firstResponseTime > 0 {
+		meta["first_response"] = firstResponseTime
+	}
+
 	if usage != nil {
 		promptDetails := usage.PromptTokensDetails
 		completionDetails := usage.CompletionTokensDetails
@@ -217,6 +226,17 @@ func (q *Quota) GetLogMeta(usage *types.Usage) map[string]any {
 		if promptDetails.TextTokens != 0 {
 			meta["input_text_tokens"] = promptDetails.TextTokens
 		}
+
+		if promptDetails.CachedWriteTokens > 0 {
+			meta["cached_write_tokens"] = promptDetails.CachedWriteTokens
+			meta["cached_write_ratio"] = q.price.GetExtraRatio("cached_write_ratio")
+		}
+
+		if promptDetails.CachedReadTokens > 0 {
+			meta["cached_read_tokens"] = promptDetails.CachedReadTokens
+			meta["cached_read_ratio"] = q.price.GetExtraRatio("cached_read_ratio")
+		}
+
 		if completionDetails.AudioTokens != 0 {
 			meta["output_audio_tokens"] = completionDetails.AudioTokens
 			meta["output_audio_tokens_ratio"] = q.price.GetExtraRatio("output_audio_tokens_ratio")
@@ -229,16 +249,8 @@ func (q *Quota) GetLogMeta(usage *types.Usage) map[string]any {
 	return meta
 }
 
-func getRequestTime(ctx context.Context) int {
-	requestTime := 0
-	requestStartTimeValue := ctx.Value("requestStartTime")
-	if requestStartTimeValue != nil {
-		requestStartTime, ok := requestStartTimeValue.(time.Time)
-		if ok {
-			requestTime = int(time.Since(requestStartTime).Milliseconds())
-		}
-	}
-	return requestTime
+func (q *Quota) getRequestTime() int {
+	return int(time.Since(q.startTime).Milliseconds())
 }
 
 func (q *Quota) getLogContent() string {
@@ -296,6 +308,16 @@ func (q *Quota) getComputeTokensByUsage(usage *types.Usage) (promptTokens, compl
 		promptTokens += int(float64(promptDetails.AudioTokens) * inputAudioTokensRatio)
 	}
 
+	if promptDetails.CachedWriteTokens > 0 {
+		cachedWriteTokensRatio := q.price.GetExtraRatio("cached_write_ratio")
+		promptTokens += int(float64(promptDetails.CachedWriteTokens) * cachedWriteTokensRatio)
+	}
+
+	if promptDetails.CachedReadTokens > 0 {
+		cachedReadTokensRatio := q.price.GetExtraRatio("cached_read_ratio")
+		promptTokens += int(float64(promptDetails.CachedReadTokens) * cachedReadTokensRatio)
+	}
+
 	if completionDetails.AudioTokens > 0 {
 		outputAudioTokensRatio := q.price.GetExtraRatio("output_audio_tokens_ratio") - 1
 		completionTokens += int(float64(completionDetails.AudioTokens) * outputAudioTokensRatio)
@@ -332,4 +354,17 @@ func (q *Quota) getComputeTokensByUsageEvent(usage *types.UsageEvent) (promptTok
 func (q *Quota) GetTotalQuotaByUsage(usage *types.Usage) (quota int) {
 	promptTokens, completionTokens := q.getComputeTokensByUsage(usage)
 	return q.GetTotalQuota(promptTokens, completionTokens)
+}
+
+func (q *Quota) GetFirstResponseTime() int64 {
+	// 先判断 firstResponseTime 是否为0
+	if q.firstResponseTime.IsZero() {
+		return 0
+	}
+
+	return q.firstResponseTime.Sub(q.startTime).Milliseconds()
+}
+
+func (q *Quota) SetFirstResponseTime(firstResponseTime time.Time) {
+	q.firstResponseTime = firstResponseTime
 }

@@ -70,7 +70,8 @@ const typeConfig = {
   3: {
     inputLabel: {
       base_url: 'AZURE_OPENAI_ENDPOINT',
-      other: '默认 API 版本'
+      other: '默认 API 版本',
+      provider_models_list: '从Azure获取已部署模型列表'
     },
     prompt: {
       base_url: '请填写AZURE_OPENAI_ENDPOINT',
@@ -137,7 +138,7 @@ const typeConfig = {
       test_model: 'ERNIE-Speed'
     },
     prompt: {
-      key: '按照如下格式输入：APIKey|SecretKey'
+      key: '按照如下格式输入：APIKey|SecretKey, 如果开启了OpenAI API，请直接输入APIKEY'
     },
     modelGroup: 'Baidu'
   },
@@ -150,7 +151,8 @@ const typeConfig = {
   },
   17: {
     inputLabel: {
-      other: '插件参数'
+      other: '插件参数',
+      provider_models_list: '从Ali获取模型列表'
     },
     input: {
       models: ['qwen-turbo', 'qwen-plus', 'qwen-max', 'qwen-max-longcontext', 'text-embedding-v1'],
@@ -232,11 +234,8 @@ const typeConfig = {
   },
   27: {
     input: {
-      models: ['abab5.5-chat', 'abab5.5s-chat', 'abab6-chat', 'embo-01'],
-      test_model: 'abab5.5-chat'
-    },
-    prompt: {
-      key: '按照如下格式输入：APISecret|groupID'
+      models: ['abab6.5s-chat', 'MiniMax-Text-01', 'speech-01-turbo', 'speech-01-240228', 'speech-01-turbo-240228'],
+      test_model: 'abab6.5s-chat'
     },
     modelGroup: 'MiniMax'
   },
@@ -441,8 +440,7 @@ const typeConfig = {
       provider_models_list: '从Siliconflow获取模型列表'
     },
     prompt: {
-      base_url: '',
-      test_model: ''
+      base_url: ''
     },
     modelGroup: 'Siliconflow'
   },
@@ -478,6 +476,30 @@ const typeConfig = {
         'recraft_styles'
       ]
     }
+  },
+  53: {
+    input: {
+      models: [
+        'kling-video_kling-v1_std_5',
+        'kling-video_kling-v1_std_10',
+        'kling-video_kling-v1_pro_5',
+        'kling-video_kling-v1_pro_10',
+
+        'kling-video_kling-v1-5_std_5',
+        'kling-video_kling-v1-5_std_10',
+        'kling-video_kling-v1-5_pro_5',
+        'kling-video_kling-v1-5_pro_10',
+
+        'kling-video_kling-v1-10_std_5',
+        'kling-video_kling-v1-10_std_10',
+        'kling-video_kling-v1-10_pro_5',
+        'kling-video_kling-v1-10_pro_10'
+      ]
+    },
+    prompt: {
+      key: '官方密钥格式： accessKey|secretKey'
+    },
+    modelGroup: 'Kling'
   }
 };
 

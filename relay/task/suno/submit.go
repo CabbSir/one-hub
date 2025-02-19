@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"one-api/common"
 	"one-api/common/logger"
+	"one-api/metrics"
 	"one-api/model"
 	"one-api/providers"
 	sunoProvider "one-api/providers/suno"
@@ -14,6 +15,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/samber/lo"
 )
 
@@ -77,8 +79,7 @@ func (t *SunoTask) Relay() *base.TaskError {
 		return base.StringTaskError(http.StatusInternalServerError, "submit_failed", resp.Message, false)
 	}
 
-	// 返回结果
-	t.C.JSON(http.StatusOK, resp)
+	t.Response = resp
 
 	t.InitTask()
 	if resp.Data != nil {
@@ -119,10 +120,12 @@ func (t *SunoTask) actionValidate() (err error) {
 	return
 }
 
-func (t *SunoTask) ShouldRetry(err *base.TaskError) bool {
+func (t *SunoTask) ShouldRetry(c *gin.Context, err *base.TaskError) bool {
 	if err == nil {
 		return false
 	}
+
+	metrics.RecordProvider(c, err.StatusCode)
 
 	if err.LocalError {
 		return false

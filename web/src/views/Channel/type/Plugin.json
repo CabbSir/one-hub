@@ -67,6 +67,20 @@
       }
     }
   },
+  "15": {
+    "use_openai_api": {
+      "name": "使用OpenAI API",
+      "description": "使用OpenAI API",
+      "params": {
+        "enable": {
+          "name": "启用",
+          "description": "是否启用使用OpenAI API, 开启用直接使用Baidu官方兼容OpenAI的API，不再做类型转换, 且上述插件无效",
+          "type": "bool",
+          "required": true
+        }
+      }
+    }
+  },
   "17": {
     "web_search": {
       "name": "网页搜索",
@@ -75,6 +89,18 @@
         "enable": {
           "name": "启用",
           "description": "是否启用网页搜索",
+          "type": "bool",
+          "required": true
+        }
+      }
+    },
+    "use_openai_api": {
+      "name": "使用OpenAI API",
+      "description": "使用OpenAI API",
+      "params": {
+        "enable": {
+          "name": "启用",
+          "description": "是否启用使用OpenAI API, 开启用直接使用ali官方兼容OpenAI的API，不再做类型转换, 且上述插件无效",
           "type": "bool",
           "required": true
         }
@@ -166,6 +192,51 @@
           "name": "启用",
           "description": "是否启用使用OpenAI API, 开启用直接使用gemini官方兼容OpenAI的API，不再做类型转换",
           "type": "bool",
+          "required": true
+        }
+      }
+    }
+  },
+
+  "27": {
+    "voice": {
+      "name": "声音映射",
+      "description": "将OpenAI的声音角色映射到minimax的声音角色, 如果有emotion，请用|隔开，例如female-chengshu|happy",
+      "params": {
+        "alloy": {
+          "name": "alloy 映射",
+          "description": "默认 female-chengshu",
+          "type": "string",
+          "required": true
+        },
+        "echo": {
+          "name": "echo 映射",
+          "description": "默认 male-qn-qingse",
+          "type": "string",
+          "required": true
+        },
+        "fable": {
+          "name": "fable 映射",
+          "description": "默认 male-qn-jingying",
+          "type": "string",
+          "required": true
+        },
+        "onyx": {
+          "name": "onyx 映射",
+          "description": "默认 presenter_male",
+          "type": "string",
+          "required": true
+        },
+        "nova": {
+          "name": "nova 映射",
+          "description": "默认 presenter_female",
+          "type": "string",
+          "required": true
+        },
+        "shimmer": {
+          "name": "shimmer 映射",
+          "description": "默认 audiobook_female_1",
+          "type": "string",
           "required": true
         }
       }
