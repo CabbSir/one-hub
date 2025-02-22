@@ -107,11 +107,6 @@ func GetChannelsList(params *SearchChannelsParams) (*DataResult[Channel], error)
 		db = db.Where("tag = ''")
 	}
 
-	// set default channel order
-	if params.Order == "" {
-		params.Order = "-priority,-weight,name"
-	}
-
 	return PaginateAndOrder(db, &params.PaginationParams, &channels, allowedChannelOrderFields)
 }
 
@@ -334,6 +329,6 @@ type ChannelStatistics struct {
 }
 
 func GetStatisticsChannel() (statistics []*ChannelStatistics, err error) {
-	err = DB.Table("channels").Select("count(*) as total_channels, status").Group("status").Scan(&statistics).Error
+	err = DB.Model(&Channel{}).Select("count(*) as total_channels, status").Group("status").Scan(&statistics).Error
 	return statistics, err
 }
