@@ -86,6 +86,9 @@ const typeConfig = {
     modelGroup: 'Google PaLM'
   },
   14: {
+    inputLabel: {
+      provider_models_list: '从Claude获取模型列表'
+    },
     input: {
       models: [
         'claude-instant-1.2',
@@ -460,7 +463,7 @@ const typeConfig = {
     },
     prompt: {
       key: '密钥信息请参考https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens',
-      base_url: 'https://models.inference.ai.azure.com'
+      base_url: 'https://models.github.ai/inference'
     },
     modelGroup: 'Github'
   },
