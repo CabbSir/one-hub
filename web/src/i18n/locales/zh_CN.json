@@ -234,7 +234,10 @@
       "original_output_price": "原输出价格: ${{ price }} /M",
       "original_times_price": "原价格: ${{ times }} / 次",
       "calculate_steps": "计算步骤: ",
-      "calculate_steps_tip": "PS：本系统按照积分计算，所有金额均为积分换算而来，1积分=$0.000002，最低消费为1积分，本计算步骤仅供参考，以实际扣费为准"
+      "calculate_steps_tip": "PS：本系统按照积分计算，所有金额均为积分换算而来，1积分=$0.000002，最低消费为1积分，本计算步骤仅供参考，以实际扣费为准",
+      "free": "免费",
+      "old_log": "旧版记录",
+      "illustrate": "* 本条记录为系统升级前所记录的log"
     }
   },
   "redemptionPage": {
@@ -517,6 +520,10 @@
           "label": "重试间隔(秒)",
           "placeholder": "重试间隔(秒)"
         },
+        "retryTimeOut": {
+          "label": "重试超时时间(秒)",
+          "placeholder": "重试超时时间(秒)"
+        },
         "displayInCurrency": "以货币形式显示额度",
         "displayTokenStat": "Billing 相关 API 显示令牌额度而非用户额度",
         "approximateToken": "使用近似的方式估算 token 数以减少计算量",
@@ -525,6 +532,8 @@
       "otherSettings": {
         "title": "其他设置",
         "mjNotify": "Midjourney 允许回调（会泄露服务器ip地址）",
+        "claudeAPIEnabled": "是否开启Claude API",
+        "geminiAPIEnabled": "是否开启Gemini API",
         "alert": "当用户使用vision模型并提供了图片链接时，我们的服务器需要下载这些图片并计算 tokens。为了在下载图片时保护服务器的 IP 地址不被泄露，可以在下方配置一个代理。这个代理配置使用的是 HTTP 或 SOCKS5 代理。如果你是个人用户，这个配置可以不用理会。代理格式为 http://127.0.0.1:1080 或 socks5://127.0.0.1:1080",
         "chatImageRequestProxy": {
           "label": "图片检测代理",
@@ -615,6 +624,11 @@
         "title": "音频令牌设置",
         "info": "配置音频倍率. 配置格式为JSON，键为模型名称，值为输入输出令牌倍率。例如：{\"gpt-4o-audio-preview\":{\"input_audio_tokens_ratio\":40,\"output_audio_tokens_ratio\":20},\"gpt-4o-mini-audio-preview\":{\"input_audio_tokens_ratio\":67,\"output_audio_tokens_ratio\":34}}",
         "save": "保存音频令牌设置"
+      },
+      "disableChannelKeywordsSettings": {
+        "title": "禁用通道关键词设置",
+        "info": "配置禁用通道关键词，每行一个关键词。",
+        "save": "保存禁用通道关键词设置"
       }
     },
     "systemSettings": {

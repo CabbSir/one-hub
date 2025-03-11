@@ -107,6 +107,8 @@ var PreConsumedQuota = 500
 var ApproximateTokenEnabled = false
 var DisableTokenEncoders = false
 var RetryTimes = 0
+var RetryTimeOut = 10
+
 var DefaultChannelWeight = uint(1)
 var RetryCooldownSeconds = 5
 
@@ -121,6 +123,12 @@ var RequestInterval time.Duration
 
 var BatchUpdateEnabled = false
 var BatchUpdateInterval = 5
+
+// Gemini
+var GeminiAPIEnabled = true
+
+// Claude
+var ClaudeAPIEnabled = true
 
 const (
 	RoleGuestUser  = 0

@@ -96,6 +96,13 @@ func InitOptionMap() {
 
 	config.OptionMap["AudioTokenJson"] = GetDefaultAudioRatio()
 
+	config.OptionMap["GeminiAPIEnabled"] = strconv.FormatBool(config.GeminiAPIEnabled)
+	config.OptionMap["ClaudeAPIEnabled"] = strconv.FormatBool(config.ClaudeAPIEnabled)
+
+	config.OptionMap["DisableChannelKeywords"] = common.GetDefaultDisableChannelKeywords()
+
+	config.OptionMap["RetryTimeOut"] = strconv.Itoa(config.RetryTimeOut)
+
 	config.OptionMapRWMutex.Unlock()
 	loadOptionsFromDatabase()
 }
@@ -145,6 +152,7 @@ var optionIntMap = map[string]*int{
 	"RetryCooldownSeconds": &config.RetryCooldownSeconds,
 	"PaymentMinAmount":     &config.PaymentMinAmount,
 	"OldTokenMaxId":        &config.OldTokenMaxId,
+	"RetryTimeOut":         &config.RetryTimeOut,
 }
 
 var optionBoolMap = map[string]*bool{
@@ -165,6 +173,8 @@ var optionBoolMap = map[string]*bool{
 	"DisplayInCurrencyEnabled":       &config.DisplayInCurrencyEnabled,
 	"MjNotifyEnabled":                &config.MjNotifyEnabled,
 	"GitHubOldIdCloseEnabled":        &config.GitHubOldIdCloseEnabled,
+	"GeminiAPIEnabled":               &config.GeminiAPIEnabled,
+	"ClaudeAPIEnabled":               &config.ClaudeAPIEnabled,
 }
 
 var optionStringMap = map[string]*string{
@@ -234,6 +244,8 @@ func updateOptionMap(key string, value string) (err error) {
 		if PricingInstance != nil {
 			PricingInstance.Init()
 		}
+	case "DisableChannelKeywords":
+		common.DisableChannelKeywordsInstance.Load(value)
 	}
 	return err
 }
