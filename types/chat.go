@@ -36,8 +36,8 @@ type ChatCompletionToolCallsFunction struct {
 }
 
 type ChatCompletionToolCalls struct {
-	Id       string                           `json:"id"`
-	Type     string                           `json:"type"`
+	Id       string                           `json:"id,omitempty"`
+	Type     string                           `json:"type,omitempty"`
 	Function *ChatCompletionToolCallsFunction `json:"function"`
 	Index    int                              `json:"index"`
 }
@@ -53,6 +53,7 @@ type ChatCompletionMessage struct {
 	ToolCallID       string                           `json:"tool_call_id,omitempty"`
 	Audio            any                              `json:"audio,omitempty"`
 	Annotations      any                              `json:"annotations,omitempty"`
+	Image            []MultimediaData                 `json:"image,omitempty"`
 }
 
 func (m ChatCompletionMessage) StringContent() string {
@@ -195,6 +196,7 @@ type ChatCompletionRequest struct {
 	MaxCompletionTokens int                           `json:"max_completion_tokens,omitempty"`
 	Temperature         *float64                      `json:"temperature,omitempty"`
 	TopP                *float64                      `json:"top_p,omitempty"`
+	TopK                *float64                      `json:"top_k,omitempty"`
 	N                   *int                          `json:"n,omitempty"`
 	Stream              bool                          `json:"stream,omitempty"`
 	StreamOptions       *StreamOptions                `json:"stream_options,omitempty"`
@@ -399,6 +401,7 @@ type ChatCompletionStreamChoiceDelta struct {
 	FunctionCall     *ChatCompletionToolCallsFunction `json:"function_call,omitempty"`
 	ToolCalls        []*ChatCompletionToolCalls       `json:"tool_calls,omitempty"`
 	ReasoningContent string                           `json:"reasoning_content,omitempty"`
+	Image            []MultimediaData                 `json:"image,omitempty"`
 }
 
 func (m *ChatCompletionStreamChoiceDelta) ToolToFuncCalls() {
@@ -451,4 +454,11 @@ func (c *ChatCompletionStreamResponse) GetResponseText() (responseText string) {
 type ChatAudio struct {
 	Voice  string `json:"voice"`
 	Format string `json:"format"`
+}
+
+type MultimediaData struct {
+	Data       string `json:"data"`
+	ExpiresAt  int64  `json:"expires_at,omitempty"`
+	ID         string `json:"id,omitempty"`
+	Transcript string `json:"transcript,omitempty"`
 }
