@@ -13,10 +13,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
   TextField,
   InputAdornment,
-  styled,
   Box
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -26,31 +24,6 @@ import { useTheme } from '@mui/material/styles';
 import IconWrapper from 'ui-component/IconWrapper';
 import Label from 'ui-component/Label';
 import ToggleButtonGroup from 'ui-component/ToggleButton';
-const GroupChip = styled(Chip)(({ theme, selected }) => ({
-  margin: theme.spacing(0.5),
-  cursor: 'pointer',
-  height: '28px',
-  borderRadius: '14px',
-  padding: '0 12px',
-  fontSize: '13px',
-  fontWeight: 500,
-  transition: 'all 0.2s ease-in-out',
-  backgroundColor: selected ? theme.palette.primary.main : theme.palette.background.paper,
-  color: selected ? theme.palette.common.white : theme.palette.text.secondary,
-  border: `1px solid ${selected ? 'transparent' : theme.palette.divider}`,
-  boxShadow: selected ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
-
-  '&:hover': {
-    backgroundColor: selected ? theme.palette.primary.dark : theme.palette.action.hover,
-    transform: 'translateY(-1px)',
-    boxShadow: '0 3px 6px rgba(0,0,0,0.12)'
-  },
-
-  '& .MuiChip-label': {
-    padding: '0 4px'
-  }
-}));
-
 // ----------------------------------------------------------------------
 export default function ModelPrice() {
   const { t } = useTranslation();
@@ -123,10 +96,14 @@ export default function ModelPrice() {
         const formatPrice = (value, type) => {
           if (typeof value === 'number') {
             let nowUnit = '';
+            let isM = unit === 'M';
+            if (type === 'times') {
+              isM = false;
+            }
             if (type === 'tokens') {
               nowUnit = `/ 1${unit}`;
             }
-            return ValueFormatter(value, true, unit === 'M') + nowUnit;
+            return ValueFormatter(value, true, isM) + nowUnit;
           }
           return value;
         };
@@ -178,12 +155,12 @@ export default function ModelPrice() {
 
   return (
     <Stack spacing={3} sx={{ padding: theme.spacing(3) }}>
-      <Typography variant="h2">
-        {t('modelpricePage.availableModels')}
-        <Typography variant="subtitle1" sx={{ mt: 1 }} color="text.secondary">
+      <Stack direction="column" spacing={1}>
+        <Typography variant="h2">{t('modelpricePage.availableModels')}</Typography>
+        <Typography variant="subtitle1" color="text.secondary">
           Available Models
         </Typography>
-      </Typography>
+      </Stack>
 
       <Card sx={{ p: 2, backgroundColor: theme.palette.background.paper }}>
         <Stack spacing={2}>
@@ -228,9 +205,6 @@ export default function ModelPrice() {
                       ) : (
                         <Label color="success">{t('modelpricePage.free')}</Label>
                       )}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {t('modelpricePage.RPM')}：<Label color="info">{group.api_rate} RPM</Label>
                     </Typography>
                   </Stack>
                 </Stack>
